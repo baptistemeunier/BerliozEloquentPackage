@@ -1,0 +1,20 @@
+{
+  "eloquent": {
+    "connection": {
+      "driver": "mysql",
+      "host": null,
+      "database": null,
+      "username": null,
+      "password": null,
+      "charset": "utf8",
+      "collation": "utf8_unicode_ci",
+      "prefix": ""
+    }
+  }
+
+  // TODO : Add twig path for debug section
+  //  "twig": {
+  //    "paths": {
+  //    "Berlioz-AtlasPackage": "%berlioz.directories.vendor%/berlioz/atlas-package/resources"
+  //    }
+}
