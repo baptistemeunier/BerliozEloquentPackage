@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Berlioz\Package\Eloquent;
 
+use Berlioz\Core\Core;
 use Berlioz\Core\CoreAwareInterface;
 use Berlioz\Core\CoreAwareTrait;
 use Berlioz\Package\Eloquent\Exception\RepositoryException;
@@ -31,14 +32,17 @@ class EntityManager implements CoreAwareInterface
     use CoreAwareTrait;
     /** @var Capsule */
     private $capsule;
+    /** @var \Berlioz\Core\Core */
+    private $core;
 
     /**
      * EntityManager constructor.
      *
      * @param Capsule $capsule
      */
-    public function __construct(Capsule $capsule)
+    public function __construct(Core $core, Capsule $capsule)
     {
+        $this->setCore($core);
         $this->capsule = $capsule;
     }
 

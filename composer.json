@@ -22,16 +22,18 @@
     },
     "require": {
         "php": "^7.2.5",
+        "berlioz/cli-core": "dev-develop",
         "berlioz/config": "^1.1",
         "berlioz/core": "dev-develop",
         "illuminate/database": "^7.8"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.5"
+        "phpunit/phpunit": "^7.5",
+        "krlove/eloquent-model-generator": "dev-master"
     },
     "config": {
         "berlioz": {
-            "package": "Berlioz\\Package\\Atlas\\EloquentPackage"
+            "package": "Berlioz\\Package\\Eloquent\\EloquentPackage"
         }
     }
 }

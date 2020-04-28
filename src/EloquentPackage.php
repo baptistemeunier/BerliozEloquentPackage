@@ -1,4 +1,16 @@
 <?php
+/**
+ * This file is part of Berlioz framework.
+ *
+ * @license   https://opensource.org/licenses/MIT MIT License
+ * @copyright 2020 Baptiste Meunier
+ * @author    Baptiste Meunier <baptiste.meunier@vigicorp.fr>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code, to the root.
+ */
+
+declare(strict_types=1);
 
 namespace Berlioz\Package\Eloquent;
 
@@ -11,8 +23,16 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\ConnectionResolver;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class EloquentPackage
+ *
+ * @package Berlioz\Package\Eloquent
+ */
 class EloquentPackage extends AbstractPackage
 {
+    /** @var \Berlioz\Package\Eloquent\Debug\Eloquent */
+    private static $debugSection;
+
     /**
      * @inheritdoc
      * @throws \Berlioz\Config\Exception\ConfigException
@@ -45,7 +65,7 @@ class EloquentPackage extends AbstractPackage
         self::addService($core, $atlasService);
 
         // Create entity manager service
-        $entityManagerService = new Service(EntityManager::class, 'entityManager');
+        $entityManagerService = new Service(EntityManager::class, 'entityManagerEloquent');
         self::addService($core, $entityManagerService);
     }
 
@@ -55,11 +75,10 @@ class EloquentPackage extends AbstractPackage
      */
     public function init(): void
     {
-        // TODO Add debut section in Berlioz Debug
-        // if ($this->getCore()->getDebug()->isEnabled()) {
-            //$this::$debugSection = new Debug\Eloquent($this->getCore());
-            //$this->getCore()->getDebug()->addSection($this::$debugSection);
-        // }
+        if ($this->getCore()->getConfig()->get('berlioz.debug', false)) {
+            $this::$debugSection = new Debug\Eloquent($this->getCore());
+            $this->getCore()->getDebug()->addSection($this::$debugSection);
+        }
     }
 
     /////////////////
@@ -87,14 +106,25 @@ class EloquentPackage extends AbstractPackage
         }
 
         $capsule->addConnection($connectionSettings);
+        $connection = $capsule->getConnection('default');
 
         $resolver = new ConnectionResolver();
-        $resolver->addConnection('default', $capsule->getConnection('default'));
+        $resolver->addConnection('default', $connection);
         $resolver->setDefaultConnection('default');
 
         Model::setConnectionResolver($resolver);
 
+        $capsule->setAsGlobal();
         $capsule->bootEloquent();
+
+        // Log queries?
+        if((bool) $core->getConfig()->get('eloquent.log_queries', false) === true) {
+            $connection->enableQueryLog();
+        }
+        // Debug activate?
+        if ($core->getConfig()->get('berlioz.debug.enable', false)) {
+            self::$debugSection->setConnection($connection);
+        }
 
         return $capsule;
     }

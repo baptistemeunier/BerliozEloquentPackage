@@ -1,4 +1,7 @@
 {
+  "commands": {
+    "eloquent:model:generate": "\\Berlioz\\Package\\Eloquent\\Command\\ModelGenerationCommand"
+  },
   "eloquent": {
     "connection": {
       "driver": "mysql",
@@ -9,12 +12,20 @@
       "charset": "utf8",
       "collation": "utf8_unicode_ci",
       "prefix": ""
+    },
+    "generation": {
+      "namespace": null,
+      "base_class_name": "Berlioz\\Package\\Eloquent\\Entity\\AbstractEntity",
+      "output_path": null,
+      "no_timestamps": null,
+      "date_format": "U",
+      "backup": true
+    },
+    "log_queries": false
+  },
+  "twig": {
+    "paths": {
+      "Berlioz-EloquentPackage": "%berlioz.directories.vendor%/berlioz/eloquent-package/resources"
     }
   }
-
-  // TODO : Add twig path for debug section
-  //  "twig": {
-  //    "paths": {
-  //    "Berlioz-AtlasPackage": "%berlioz.directories.vendor%/berlioz/atlas-package/resources"
-  //    }
 }
