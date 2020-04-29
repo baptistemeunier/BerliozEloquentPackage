@@ -17,10 +17,12 @@ namespace Berlioz\Package\Eloquent;
 use Berlioz\Core\Core;
 use Berlioz\Core\CoreAwareInterface;
 use Berlioz\Core\CoreAwareTrait;
+use Berlioz\Package\Eloquent\Exception\EloquentException;
 use Berlioz\Package\Eloquent\Exception\RepositoryException;
 use Berlioz\Package\Eloquent\Repository\RepositoryInterface;
 use Exception;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Throwable;
 
 /**
  * Class EntityManager
@@ -44,6 +46,48 @@ class EntityManager implements CoreAwareInterface
     {
         $this->setCore($core);
         $this->capsule = $capsule;
+    }
+
+    /**
+     * Begin a transaction
+     *
+     * @throws EloquentException
+     */
+    public function beginTransaction(): void
+    {
+        try {
+            $this->capsule->getDatabaseManager()->beginTransaction();
+        } catch (Throwable $e) {
+            throw new EloquentException("Failed to start transaction", null, $e);
+        }
+    }
+
+    /**
+     * Commit a transaction
+     *
+     * @throws EloquentException
+     */
+    public function commit()
+    {
+        try {
+            $this->capsule->getDatabaseManager()->commit();
+        } catch (Throwable $e) {
+            throw new EloquentException("Failed to commit transaction", null, $e);
+        }
+    }
+
+    /**
+     * Rollback a transaction
+     *
+     * @throws EloquentException
+     */
+    public function rollBack()
+    {
+        try {
+            $this->capsule->getDatabaseManager()->rollBack();
+        } catch (Throwable $e) {
+            throw new EloquentException("Failed to rollback transaction", null, $e);
+        }
     }
 
     /**
@@ -79,7 +123,7 @@ class EntityManager implements CoreAwareInterface
         } catch (RepositoryException $e) {
             throw $e;
         } catch (Exception $e) {
-            throw new RepositoryException(sprintf('Unable to instance repository class "%s"', $class));
+            throw new RepositoryException(sprintf('Unable to instance repository class "%s"', $class), null, $e);
         }
     }
 }
