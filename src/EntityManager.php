@@ -47,6 +47,17 @@ class EntityManager implements CoreAwareInterface
     }
 
     /**
+     * Get query builder
+     *
+     * @param Capsule $capsule
+     * @return \Illuminate\Database\DatabaseManager
+     */
+    public function getQueryBuilder()
+    {
+        return $this->capsule->getDatabaseManager();
+    }
+
+    /**
      * Get repository.
      *
      * @param string $class
