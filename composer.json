@@ -23,7 +23,7 @@
     "require": {
         "php": "^7.2.5",
         "berlioz/config": "^1.1",
-        "berlioz/core": "dev-develop",
+        "berlioz/core": "^1.0",
         "illuminate/database": "^7.8"
     },
     "require-dev": {
